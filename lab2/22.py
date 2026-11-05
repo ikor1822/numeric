@@ -1,6 +1,7 @@
 
 import math
 import matplotlib.pyplot as plt
+import sympy as sp
 
 def phi1(x1, x2):
     return math.sqrt(16 - x2 ** 2)
@@ -9,22 +10,25 @@ def phi1(x1, x2):
 def phi2(x1, x2):
     return math.log(x1 + 4)
 
+x1_s, x2_s = sp.symbols('x1 x2')
 
-def dphi1_dx1(x1, x2):
-    return 0
+f1_expr = x1_s ** 2 + x2_s ** 2 - 16
+f2_expr = x1_s - sp.exp(x2_s) + 4
 
+phi1_expr = sp.sqrt(16 - x2_s ** 2)
+phi2_expr = sp.log(x1_s + 4)
 
-def dphi1_dx2(x1, x2):
-    return -x2 / math.sqrt(16 - x2 ** 2)
+df1_dx1 = sp.lambdify((x1_s, x2_s), sp.diff(f1_expr, x1_s), 'math')
+df1_dx2 = sp.lambdify((x1_s, x2_s), sp.diff(f1_expr, x2_s), 'math')
 
+df2_dx1 = sp.lambdify((x1_s, x2_s), sp.diff(f2_expr, x1_s), 'math')
+df2_dx2 = sp.lambdify((x1_s, x2_s), sp.diff(f2_expr, x2_s), 'math')
 
-def dphi2_dx1(x1, x2):
-    return 1 / (x1 + 4)
+dphi1_dx1 = sp.lambdify((x1_s, x2_s), sp.diff(phi1_expr, x1_s), 'math')
+dphi1_dx2 = sp.lambdify((x1_s, x2_s), sp.diff(phi1_expr, x2_s), 'math')
 
-
-def dphi2_dx2(x1, x2):
-    return 0
-
+dphi2_dx1 = sp.lambdify((x1_s, x2_s), sp.diff(phi2_expr, x1_s), 'math')
+dphi2_dx2 = sp.lambdify((x1_s, x2_s), sp.diff(phi2_expr, x2_s), 'math')
 
 def simple_iteration_method(x1, x2, epsilon, max_iter=100):
 
@@ -71,22 +75,6 @@ def f1(x1, x2):
 
 def f2(x1, x2):
     return x1 - math.exp(x2) + 4
-
-
-def df1_dx1(x1, x2):
-    return 2 * x1
-
-
-def df1_dx2(x1, x2):
-    return 2 * x2
-
-
-def df2_dx1(x1, x2):
-    return 1
-
-
-def df2_dx2(x1, x2):
-    return -math.exp(x2)
 
 
 def newton_method(x1, x2, epsilon, max_iter=100):
@@ -173,7 +161,7 @@ plt.title('Графики системы нелинейных уравнений
 plt.show()
 
 
-x0_1 = 3.2
+x0_1 = 3.5
 x0_2 = 2
 
 epsilon = 1e-6

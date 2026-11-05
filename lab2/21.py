@@ -1,6 +1,7 @@
 
 import matplotlib.pyplot as plt
 import math
+import sympy as sp
 
 def phi(x):
     expr = -x ** 2 + 2 * x + 1
@@ -37,16 +38,18 @@ def simple_iteration_method(a, b, epsilon, max_iter=100):
 
 
 
-def f(x):
-    return x**3 + x**2 - 2*x - 1
+x_s = sp.symbols('x')
 
 
-def df(x):
-    return 3*x**2 + 2*x - 2
+f_expr = x_s ** 3 + x_s ** 2 - 2 * x_s - 1
 
 
-def ddf(x):
-    return 6*x + 2
+df_expr = sp.diff(f_expr, x_s)
+ddf_expr = sp.diff(df_expr, x_s)
+
+f = sp.lambdify(x_s, f_expr, 'math')
+df = sp.lambdify(x_s, df_expr, 'math')
+ddf = sp.lambdify(x_s, ddf_expr, 'math')
 
 
 def newton_method(a, b, epsilon, max_iter=100):
